@@ -1,5 +1,7 @@
 <?php 
 
+$var = 'hello';
+
 // Add meta box
 function auction_list_add_meta_box() {
     add_meta_box(
