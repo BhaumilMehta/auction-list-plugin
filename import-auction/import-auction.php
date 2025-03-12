@@ -23,17 +23,21 @@ function custom_cron_schedules($schedules) {
 add_filter('cron_schedules', 'custom_cron_schedules');
 
 
-add_action('import_auction_list_cron', 'import_auction_list');
+add_action('init', 'import_auction_list');
 
 function import_auction_list() {
     $curl = curl_init();
     
+    $key_x = get_option('key_x');
+    $key_y = get_option('key_y');
+    $key_z = get_option('key_z');
+
     curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://localauctions.com/elasticsearch/search',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS =>'{"z":"zY1L2m1a58kbSM9K9S6QyPPK8XOVilg6okf+cDlAdSMPJ6pU8GXpb0AEt9NQa6Jvgco4B/nYEvk1W3npKtlRFaMNS1j/0RFi/pwRqBe9SyPV31uqjw+Y4W2zl9nEqqASTM4KDSQwwg5q1msJyHHwOF86ykRRpe2Gl3CcCBU1WWJcPbq0TxHDz9pjiUTO/Y5RGwPmAasddYjbyYRcG1BL2ZKvcw/xousijlJx/R22TZZ2y/6DjN6VY8Fv5daUoSaJ7eAoOHz5INX9rtSNmotyNgHq4JA6oPM8oDrEXLocgUJKuCwC2d8qnR0B3vBNQhbW3GrE3yTe+PT6kHFV6kXoooOIXZMR+qb+PIISDaKjdBpPK6m9IxhP75LEYHysjwvxYa91f0WdRy4U+c6/cMZbv9QYqJUkScThoTJb2vH06wEbYx3wrdBIqyXm6Xc0O4XDt6kr3lIfwHyODpzKpaYxe3KOXY1K9sLZ5OTuDl5NZijT5AVCxACKLb26LLgfgR6JAG0njl8STZGeiOf69OE2sCozdrgSlZiJSOkRul04lfr5jqBo4WQA+eSxFdkGKFBtRkG/Ng90VprRDnHINdFDg2/0qgh6hkq6+Y6G1bIQR1mEWkHV+OjELFDPlgWn6Myfs6n0QHnm22v05+GG9AxHibnzi/8xKmKrHBT43Nmf0VDbbVx+5hrKhJBcXTNoPZrToMt7MMK37PD12jEx7vVaKctpP+N79fBKF864kYnNAmRKZ/p/k9bPDcuhBjd5HbtM","y":"4UXlXTfj2krMjQzslpBtyg==","x":"0ODL0L4HLXyzFTULm5TEaBJkJCWtuHp1KisKSiePxi0="}',
+        CURLOPT_POSTFIELDS =>'{"z":"'.$key_z.'","y":"'.$key_y.'","x":"'.$key_x.'"}',
         CURLOPT_HTTPHEADER => array(
             'Accept: application/json, text/javascript, */*; q=0.01',
             'Content-Type: application/json',
@@ -50,7 +54,7 @@ function import_auction_list() {
         return;
     }
 
-    $data = json_decode($response, true);   
+    $data = json_decode($response, true);       
 
     
     if (!isset($data['hits']['hits']) || !is_array($data['hits']['hits'])) {

@@ -34,6 +34,15 @@ function auction_list_register_admin_page() {
         'auction_list_ui_settings_page',
         'dashicons-admin-customizer',
     );
+    add_submenu_page(
+        'edit.php?post_type=auction_list',
+        'Auction Import Keys',
+        'Import Key Settings',
+        'manage_options',
+        'auction-key-settings',
+        'auction_list_key_settings_page',
+        'dashicons-admin-customizer',
+    );
 }
 add_action('admin_menu', 'auction_list_register_admin_page');
 
@@ -174,6 +183,43 @@ function auction_list_ui_settings_page() {
 
     <?php
 }
+
+function auction_list_key_settings_page(){
+    
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['auction_key_settings'])) {
+        update_option('key_x', sanitize_text_field($_POST['key_x']));
+        update_option('key_y', sanitize_text_field($_POST['key_y']));
+        update_option('key_z', sanitize_text_field($_POST['key_z']));
+
+        echo '<div class="updated"><p>Settings saved.</p></div>';
+    }
+
+    $key_x = get_option('key_x');
+    $key_y = get_option('key_y');
+    $key_z = get_option('key_z');
+
+    ?>
+
+    <form method="post">
+
+    <div style="margin-top:20px;">
+            <label for="key_x"><?php _e('Key X:', 'auction-list'); ?></label>
+            <input type="text" id="key_x" name="key_x" placeholder="Enter X Key" value="<?php echo esc_attr($key_x); ?>" style="margin-right: 10px;" required>
+            
+            <label for="key_y"><?php _e('Key Y:', 'auction-list'); ?></label>
+            <input type="text" id="key_y" name="key_y" placeholder="Enter Y Key" value="<?php echo esc_attr($key_y); ?>" style="margin-right: 10px;" required>
+
+            <label for="key_z"><?php _e('Key Z:', 'auction-list'); ?></label>
+            <input type="text" id="key_z" name="key_z" placeholder="Enter Z Key" value="<?php echo esc_attr($key_z); ?>" style="margin-right: 10px;" required>
+
+            <input type="submit" name="auction_key_settings" id="" class="button-primary" valu="<?php _e('Save Keys', 'auction-list'); ?>">
+                
+            </input>
+        </div>
+
+    </form>
+
+<?php }
 
 
 
